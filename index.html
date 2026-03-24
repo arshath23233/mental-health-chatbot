@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSpace — Your Mental Health Journal Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/journal.css">
+    <link rel="stylesheet" href="css/crisis.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
+    <!-- Onboarding Screen -->
+    <div id="onboarding" class="onboarding-screen">
+        <div class="onboarding-content">
+            <div class="onboarding-logo">
+                <div class="logo-icon"><i class="fas fa-brain"></i></div>
+                <h1>MindSpace</h1>
+                <p class="tagline">Your safe space to reflect, express, and heal.</p>
+            </div>
+            <div class="onboarding-form">
+                <label for="userName">What should I call you?</label>
+                <input type="text" id="userName" placeholder="Enter your name..." maxlength="30" autocomplete="off">
+                <p class="onboarding-note"><i class="fas fa-lock"></i> Your conversations stay private and are saved as journal entries on this device.</p>
+                <button id="startBtn" class="btn-primary" disabled>
+                    <span>Begin Your Journey</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="onboarding-features">
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <span>Empathetic Conversations</span>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-book-open"></i>
+                    <span>Auto-saved Journals</span>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Mood Tracking</span>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Crisis Support</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app-container hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-small">
+                    <i class="fas fa-brain"></i>
+                    <span>MindSpace</span>
+                </div>
+                <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <span class="user-greeting">Hey, <strong id="displayName">User</strong></span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-view="chat">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat</span>
+                </button>
+                <button class="nav-item" data-view="journal">
+                    <i class="fas fa-book-open"></i>
+                    <span>My Journal</span>
+                </button>
+                <button class="nav-item" data-view="dashboard">
+                    <i class="fas fa-chart-area"></i>
+                    <span>Mood Dashboard</span>
+                </button>
+                <button class="nav-item" data-view="helpline">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Crisis Helplines</span>
+                </button>
+                <button class="nav-item" data-view="about">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-new-chat" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>New Session</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="top-bar-title" id="topBarTitle">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat with MindSpace</span>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn-icon" id="saveJournalBtn" title="Save as Journal">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                    <button class="btn-icon sos-btn" id="sosBtn" title="Emergency Helplines">
+                        <i class="fas fa-phone-alt"></i>
+                        <span class="sos-pulse"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat View -->
+            <section class="view-panel active" id="chatView">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be inserted here -->
+                    </div>
+                    <div class="typing-indicator hidden" id="typingIndicator">
+                        <div class="typing-avatar"><i class="fas fa-brain"></i></div>
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="typing-text">MindSpace is thinking...</span>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <div class="mood-quick-select" id="moodQuickSelect">
+                        <span class="mood-label">How are you feeling?</span>
+                        <div class="mood-chips">
+                            <button class="mood-chip" data-mood="happy">😊 Happy</button>
+                            <button class="mood-chip" data-mood="sad">😢 Sad</button>
+                            <button class="mood-chip" data-mood="anxious">😰 Anxious</button>
+                            <button class="mood-chip" data-mood="angry">😠 Angry</button>
+                            <button class="mood-chip" data-mood="stressed">😫 Stressed</button>
+                            <button class="mood-chip" data-mood="grateful">🙏 Grateful</button>
+                            <button class="mood-chip" data-mood="lonely">😔 Lonely</button>
+                            <button class="mood-chip" data-mood="confused">🤔 Confused</button>
+                        </div>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea id="chatInput" placeholder="Share what's on your mind..." rows="1" maxlength="2000"></textarea>
+                        <button id="sendBtn" class="btn-send" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <p class="input-disclaimer">MindSpace is not a substitute for professional therapy. If you're in crisis, please reach out to a helpline.</p>
+                </div>
+            </section>
+
+            <!-- Journal View -->
+            <section class="view-panel" id="journalView">
+                <div class="journal-container">
+                    <div class="journal-header">
+                        <h2><i class="fas fa-book-open"></i> My Journal</h2>
+                        <div class="journal-controls">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="journalSearch" placeholder="Search your journals...">
+                            </div>
+                            <select id="journalFilter">
+                                <option value="all">All Moods</option>
+                                <option value="happy">😊 Happy</option>
+                                <option value="sad">😢 Sad</option>
+                                <option value="anxious">😰 Anxious</option>
+                                <option value="angry">😠 Angry</option>
+                                <option value="stressed">😫 Stressed</option>
+                                <option value="grateful">🙏 Grateful</option>
+                                <option value="lonely">😔 Lonely</option>
+                                <option value="confused">🤔 Confused</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="journal-list" id="journalList">
+                        <div class="journal-empty">
+                            <i class="fas fa-feather-alt"></i>
+                            <h3>Your journal is empty</h3>
+                            <p>Start a conversation with MindSpace and your chats will be saved as journal entries automatically.</p>
+                            <button class="btn-primary" onclick="switchView('chat')">Start Chatting</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Journal Detail Modal -->
+                <div class="journal-detail-overlay hidden" id="journalDetailOverlay">
+                    <div class="journal-detail">
+                        <div class="journal-detail-header">
+                            <button class="btn-back" id="journalBackBtn"><i class="fas fa-arrow-left"></i> Back</button>
+                            <div class="journal-detail-actions">
+                                <button class="btn-icon" id="exportJournalBtn" title="Export as Text"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon danger" id="deleteJournalBtn" title="Delete Entry"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="journal-detail-content" id="journalDetailContent">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard View -->
+            <section class="view-panel" id="dashboardView">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h2><i class="fas fa-chart-area"></i> Mood Dashboard</h2>
+                        <p>Track your emotional patterns over time</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-book"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="totalEntries">0</span>
+                                <span class="stat-label">Journal Entries</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="currentStreak">0</span>
+                                <span class="stat-label">Day Streak</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="avgMood">—</span>
+                                <span class="stat-label">Avg Mood Score</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-smile"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="topMood">—</span>
+                                <span class="stat-label">Most Frequent Mood</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h3>Mood Over Time</h3>
+                            <div class="chart-wrapper" style="height: 300px;">
+                                <canvas id="moodTimeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Mood Distribution</h3>
+                            <div class="chart-wrapper" style="height: 300px;">
+                                <canvas id="moodDistChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-empty hidden" id="dashboardEmpty">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Not enough data yet</h3>
+                        <p>Have a few more conversations to see your mood trends here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Helpline View -->
+            <section class="view-panel" id="helplineView">
+                <div class="helpline-container">
+                    <div class="helpline-hero">
+                        <div class="helpline-hero-icon"><i class="fas fa-hands-helping"></i></div>
+                        <h2>You Are Not Alone</h2>
+                        <p>If you or someone you know is struggling, please reach out. Help is always available.</p>
+                    </div>
+                    <div class="helpline-grid">
+                        <div class="helpline-card emergency">
+                            <div class="helpline-badge">24/7 Emergency</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> Vandrevala Foundation</h3>
+                                <p>Multilingual mental health helpline — 24/7 support in multiple Indian languages</p>
+                                <a href="tel:9999666555" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 9999 666 555
+                                </a>
+                                <span class="helpline-detail">Free | Confidential | All languages</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card emergency">
+                            <div class="helpline-badge">24/7 Emergency</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> iCall (TISS)</h3>
+                                <p>Psychosocial helpline by Tata Institute of Social Sciences</p>
+                                <a href="tel:9152987821" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 9152 987 821
+                                </a>
+                                <span class="helpline-detail">Mon–Sat | 8 AM – 10 PM</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card">
+                            <div class="helpline-badge">Helpline</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> NIMHANS</h3>
+                                <p>National Institute of Mental Health & Neuro Sciences, Bangalore</p>
+                                <a href="tel:08046110007" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 080-46110007
+                                </a>
+                                <span class="helpline-detail">Toll Free | Professional Support</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card">
+                            <div class="helpline-badge">Helpline</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> Snehi</h3>
+                                <p>Emotional support and suicide prevention helpline</p>
+                                <a href="tel:04424640050" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 044-24640050
+                                </a>
+                                <span class="helpline-detail">24/7 | Tamil Nadu based</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card">
+                            <div class="helpline-badge">Helpline</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> AASRA</h3>
+                                <p>Crisis intervention and suicide prevention</p>
+                                <a href="tel:9820466726" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 9820 466 726
+                                </a>
+                                <span class="helpline-detail">24/7 | Mumbai based</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card">
+                            <div class="helpline-badge">Helpline</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> Kiran Mental Health</h3>
+                                <p>Government of India Mental Health Rehabilitation Helpline</p>
+                                <a href="tel:18005990019" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 1800-599-0019
+                                </a>
+                                <span class="helpline-detail">Toll Free | Govt. of India</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card">
+                            <div class="helpline-badge">Helpline</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> Connecting Trust</h3>
+                                <p>Emotional and crisis support helpline based in Bangalore</p>
+                                <a href="tel:9922001122" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 9922 001 122
+                                </a>
+                                <span class="helpline-detail">12 PM – 8 PM | All days</span>
+                            </div>
+                        </div>
+                        <div class="helpline-card">
+                            <div class="helpline-badge">Helpline</div>
+                            <div class="helpline-info">
+                                <h3><i class="fas fa-phone-alt"></i> Roshni Trust</h3>
+                                <p>Suicide prevention and emotional support</p>
+                                <a href="tel:04066202000" class="helpline-number">
+                                    <i class="fas fa-phone"></i> 040-66202000
+                                </a>
+                                <span class="helpline-detail">11 AM – 9 PM | Hyderabad</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="helpline-note">
+                        <i class="fas fa-info-circle"></i>
+                        <p>In case of an extreme emergency, please call <strong>112</strong> (India Emergency Number) or go to your nearest hospital emergency department.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About View -->
+            <section class="view-panel" id="aboutView">
+                <div class="about-container">
+                    <div class="about-hero">
+                        <div class="about-logo"><i class="fas fa-brain"></i></div>
+                        <h2>About MindSpace</h2>
+                        <p class="about-subtitle">A Mental Health Journal Chatbot — Final Year Project</p>
+                    </div>
+                    <div class="about-content">
+                        <div class="about-card">
+                            <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
+                            <p>MindSpace is designed to provide a safe, non-judgmental space for individuals to express their thoughts and feelings. Through empathetic conversations, it helps users develop self-awareness, track emotional patterns, and build healthier coping mechanisms.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-cogs"></i> How It Works</h3>
+                            <ul>
+                                <li><strong>Empathetic Chatbot</strong> — Uses advanced NLP-inspired response generation with contextual understanding, active listening techniques, and therapeutic conversation patterns</li>
+                                <li><strong>Automatic Journaling</strong> — Every conversation is saved as a journal entry with mood detection and emotion tagging</li>
+                                <li><strong>Crisis Detection</strong> — Real-time keyword monitoring triggers immediate display of Indian crisis helplines</li>
+                                <li><strong>Mood Analytics</strong> — Visual dashboard tracks emotional trends over time</li>
+                            </ul>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-shield-alt"></i> Privacy & Safety</h3>
+                            <p>Your data is stored securely and never shared with third parties. MindSpace is not a replacement for professional mental health care. If you are in crisis, please contact the helplines listed in this application.</p>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-lightbulb"></i> Key Features</h3>
+                            <div class="feature-list">
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Human-like empathetic responses</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Context-aware conversations</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Automatic mood detection</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Journal entry auto-saving</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Crisis keyword detection</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Indian crisis helplines</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Mood tracking dashboard</div>
+                                <div class="feature-item"><i class="fas fa-check-circle"></i> Conversation export</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-disclaimer">
+                        <p><strong>⚠️ Disclaimer:</strong> MindSpace is an academic project and should not be considered a substitute for professional mental health treatment. Always seek help from a qualified mental health professional if needed.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Crisis Alert Modal -->
+    <div class="crisis-modal-overlay hidden" id="crisisModal">
+        <div class="crisis-modal">
+            <div class="crisis-modal-header">
+                <div class="crisis-icon-animated">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h2>We Care About You</h2>
+                <p>It sounds like you might be going through a really tough time. You don't have to face this alone — help is just a phone call away.</p>
+            </div>
+            <div class="crisis-modal-body">
+                <div class="crisis-quick-call">
+                    <a href="tel:9999666555" class="crisis-call-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <strong>Vandrevala Foundation</strong>
+                            <span>9999 666 555 (24/7)</span>
+                        </div>
+                    </a>
+                    <a href="tel:18005990019" class="crisis-call-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <strong>Kiran Helpline (Govt)</strong>
+                            <span>1800-599-0019 (Toll Free)</span>
+                        </div>
+                    </a>
+                    <a href="tel:9152987821" class="crisis-call-btn">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <strong>iCall (TISS)</strong>
+                            <span>9152 987 821</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="crisis-message">
+                    <p><i class="fas fa-quote-left"></i> You are worthy of love, support, and care. Reaching out is a sign of strength, not weakness. <i class="fas fa-quote-right"></i></p>
+                </div>
+            </div>
+            <div class="crisis-modal-footer">
+                <button class="btn-see-all" onclick="switchView('helpline'); closeCrisisModal();">
+                    <i class="fas fa-list"></i> See All Helplines
+                </button>
+                <button class="btn-close-crisis" id="closeCrisisBtn">
+                    I'm okay, continue chatting
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/chatbot-engine.js"></script>
+    <script src="js/crisis-detector.js"></script>
+    <script src="js/journal-manager.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
